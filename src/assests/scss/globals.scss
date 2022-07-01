@@ -1,0 +1,88 @@
+@import "./_variables";
+@import "./_mixins";
+@import "./bootstrap";
+@import "./autocomplete";
+@import "./menu";
+@import "./modal";
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Roboto, Helvetica Neue, sans-serif, -apple-system;
+  color: $primary-1;
+  font-size: 1rem;
+}
+* {
+  font-family: Roboto, Helvetica Neue, sans-serif, -apple-system;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 500;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background: #fff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(41, 41, 64, 0.8);
+  border-radius: 10px;
+}
+.list-unstyled {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.custom-inputFile-invisible {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+.convo-input {
+  border-radius: 4px;
+  width: 100%;
+  height: 40px;
+  padding: 4px 12px;
+  border: 1px solid $borders-grey;
+  @include font-label-s;
+  outline: none !important;
+  &:focus {
+    border-color: $emp-blue-1;
+    box-shadow: 0 0 0 1px inset $emp-blue-1;
+  }
+  &.ng-dirty.ng-touched.ng-invalid {
+    border-color: $error-red !important;
+    box-shadow: 0 0 0 1px $error-red !important;
+  }
+}
+textarea {
+  &.convo-input { 
+    height: 150px;
+    padding: 12px;
+    resize: none;
+  }
+}
+.MuiRating-iconFilled {
+  color: #27ae60 !important;
+}
+.MuiTabs-indicator {
+  border-radius: 3px 3px 0 0;
+}
+.convo-bg-color {
+  background: $convo-bg;
+}

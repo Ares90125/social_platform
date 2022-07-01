@@ -1,0 +1,9 @@
+pages
+src
+styles
+Dockerfile
+tsconfig.json
+package-lock.json
+yarn.lock
+README.md  
+bitbucket-pipelines.yml

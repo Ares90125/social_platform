@@ -1,0 +1,223 @@
+image: node:17-alpine3.14
+
+pipelines:
+  branches:
+    feature1:
+      - step:
+          name: Build and Deploy to feature1
+          deployment: feature1
+          size: 2x
+          caches:
+            - node
+            - nextcache
+          script:
+            - apk add --no-cache git
+            - yarn install
+            - mv .env.development .env.production
+            - yarn build
+            - rm -rf node_modules
+            - yarn install --production
+            - docker build -t cmc-frontend:feature1 .
+            - docker tag cmc-frontend:feature1 cmc-frontend:$BITBUCKET_COMMIT
+            - pipe: atlassian/aws-ecr-push-image:1.5.0
+              variables:
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                IMAGE_NAME: cmc-frontend:feature1
+                TAGS: "${BITBUCKET_COMMIT} feature1"
+            - pipe: atlassian/aws-ecs-deploy:1.6.1
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID # Optional if already defined in the context.
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
+                CLUSTER_NAME: API-feature1-ECS
+                SERVICE_NAME: cmc-web
+                FORCE_NEW_DEPLOYMENT: "true"
+                WAIT: "true"
+    feature2:
+      - step:
+          name: Build and Deploy to feature2
+          deployment: feature2
+          size: 2x
+          caches:
+            - node
+            - nextcache
+          script:
+            - apk add --no-cache git
+            - yarn install
+            - mv .env.development .env.production
+            - yarn build
+            - rm -rf node_modules
+            - yarn install --production
+            - docker build -t cmc-frontend:feature2 .
+            - docker tag cmc-frontend:feature2 cmc-frontend:$BITBUCKET_COMMIT
+            - pipe: atlassian/aws-ecr-push-image:1.5.0
+              variables:
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                IMAGE_NAME: cmc-frontend:feature2
+                TAGS: "${BITBUCKET_COMMIT} feature2"
+            - pipe: atlassian/aws-ecs-deploy:1.6.1
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID # Optional if already defined in the context.
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
+                CLUSTER_NAME: API-feature2-ECS
+                SERVICE_NAME: cmc-web
+                FORCE_NEW_DEPLOYMENT: "true"
+                WAIT: "true"
+    feature3:
+      - step:
+          name: Build and Deploy to feature3
+          deployment: feature3
+          size: 2x
+          caches:
+            - node
+            - nextcache
+          script:
+            - apk add --no-cache git
+            - yarn install
+            - mv .env.development .env.production
+            - yarn build
+            - rm -rf node_modules
+            - yarn install --production
+            - docker build -t cmc-frontend:feature3 .
+            - docker tag cmc-frontend:feature3 cmc-frontend:$BITBUCKET_COMMIT
+            - pipe: atlassian/aws-ecr-push-image:1.5.0
+              variables:
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                IMAGE_NAME: cmc-frontend:feature3
+                TAGS: "${BITBUCKET_COMMIT} feature3"
+            - pipe: atlassian/aws-ecs-deploy:1.6.1
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID # Optional if already defined in the context.
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
+                CLUSTER_NAME: API-feature3-ECS
+                SERVICE_NAME: cmc-web
+                FORCE_NEW_DEPLOYMENT: "true"
+                WAIT: "true"
+    feature4:
+      - step:
+          name: Build and Deploy to feature4
+          deployment: feature4
+          size: 2x
+          caches:
+            - node
+            - nextcache
+          script:
+            - apk add --no-cache git
+            - yarn install
+            - mv .env.development .env.production
+            - yarn build
+            - rm -rf node_modules
+            - yarn install --production
+            - docker build -t cmc-frontend:feature4 .
+            - docker tag cmc-frontend:feature4 cmc-frontend:$BITBUCKET_COMMIT
+            - pipe: atlassian/aws-ecr-push-image:1.5.0
+              variables:
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                IMAGE_NAME: cmc-frontend:feature4
+                TAGS: "${BITBUCKET_COMMIT} feature4"
+            - pipe: atlassian/aws-ecs-deploy:1.6.1
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID # Optional if already defined in the context.
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
+                CLUSTER_NAME: API-feature4-ECS
+                SERVICE_NAME: cmc-web
+                FORCE_NEW_DEPLOYMENT: "true"
+                WAIT: "true"
+    develop:
+      - step:
+          name: Build and Deploy to develop
+          deployment: development
+          size: 2x
+          caches:
+            - node
+            - nextcache
+          script:
+            - apk add --no-cache git
+            - yarn install
+            - mv .env.development .env.production
+            - yarn build
+            - rm -rf node_modules
+            - yarn install --production
+            - docker build -t cmc-frontend:develop .
+            - docker tag cmc-frontend:develop cmc-frontend:$BITBUCKET_COMMIT
+            - pipe: atlassian/aws-ecr-push-image:1.5.0
+              variables:
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                IMAGE_NAME: cmc-frontend:develop
+                TAGS: "${BITBUCKET_COMMIT} develop"
+            - pipe: atlassian/aws-ecs-deploy:1.6.1
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID # Optional if already defined in the context.
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
+                CLUSTER_NAME: API-develop-ECS
+                SERVICE_NAME: cmc-web
+                FORCE_NEW_DEPLOYMENT: "true"
+                WAIT: "true"
+    staging:
+      - step:
+          name: Build and Deploy to staging
+          deployment: staging
+          size: 2x
+          caches:
+            - node
+            - nextcache
+          script:
+            - apk add --no-cache git
+            - yarn install
+            - mv .env.staging .env.production
+            - yarn build
+            - rm -rf node_modules
+            - yarn install --production
+            - docker build -t cmc-frontend:staging .
+            - docker tag cmc-frontend:staging cmc-frontend:$BITBUCKET_COMMIT
+            - pipe: atlassian/aws-ecr-push-image:1.5.0
+              variables:
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                IMAGE_NAME: cmc-frontend:staging
+                TAGS: "${BITBUCKET_COMMIT} staging"
+            - pipe: atlassian/aws-ecs-deploy:1.6.1
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID # Optional if already defined in the context.
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
+                CLUSTER_NAME: API-staging-ECS
+                SERVICE_NAME: cmc-web
+                FORCE_NEW_DEPLOYMENT: "true"
+                WAIT: "true"
+    master:
+      - step:
+          name: Build and Deploy to production
+          deployment: production
+          size: 2x
+          caches:
+            - node
+            - nextcache
+          script:
+            - apk add --no-cache git
+            - yarn install
+            - yarn build
+            - rm -rf node_modules
+            - yarn install --production
+            - docker build -t cmc-frontend .
+            - docker tag cmc-frontend:latest cmc-frontend:$BITBUCKET_COMMIT
+            - pipe: atlassian/aws-ecr-push-image:1.5.0
+              variables:
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                IMAGE_NAME: cmc-frontend:latest
+                TAGS: "${BITBUCKET_COMMIT} latest"
+            - pipe: atlassian/aws-ecs-deploy:1.6.1
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID # Optional if already defined in the context.
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
+                CLUSTER_NAME: API-production-ECS
+                SERVICE_NAME: cmc-web
+                FORCE_NEW_DEPLOYMENT: "true"
+                WAIT: "true"
+definitions:
+  caches:
+    nextcache: .next/cache

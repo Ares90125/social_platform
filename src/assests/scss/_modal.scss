@@ -1,0 +1,58 @@
+@import "./_variables";
+@import "./_mixins";
+.modal-lg {
+  .MuiDialog-paper {
+    width: 960px;
+    max-width: 960px;
+  }
+}
+.modal-md {
+  .MuiDialog-paper {
+    width: 520px;
+  }
+}
+.modal-sm {
+    .MuiDialog-paper {
+        width: 380px;
+      } 
+}
+.modal-scrollable {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  .modal-body {
+    overflow-y: auto;
+  }
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid $borders-grey;
+  h5 {
+    @include font-label-m-md;
+    color: $primary-1;
+    margin: 0;
+  }
+  .modal-close-btn {
+      padding: 0;
+      border: none;
+      outline: none !important;
+      background: none;
+      cursor: pointer;
+      svg {
+          display: block;
+      }
+  }
+}
+.modal-body {
+    padding: 16px;
+    .label {
+        color: $black-70;
+        @include font-label-s;
+    }
+}
+.modal-footer {
+    padding: 16px;
+}

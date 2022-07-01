@@ -1,0 +1,283 @@
+@import "./_variables";
+@import "./_mixins";
+
+.content_manager_wrap {
+  padding-top: 80px;
+  display: flex;
+  padding: 80px 24px 24px;
+  .content_left {
+    width: 336px;
+    .selector {
+      padding-bottom: 20px;
+      .selector_heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 8px;
+        span {
+          @include font-label-xs;
+          color: $black-50;
+        }
+      }
+    }
+    .campaign_kpis_wrap {
+      border: 1px solid $borders-grey;
+      border-radius: 3px;
+      padding: 6px 16px;
+      margin-bottom: 20px;
+      ul {
+        li {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 5px 0;
+          border-bottom: 1px solid $borders-grey;
+          &:last-child {
+            border: none;
+          }
+          span {
+            color: $black-70;
+            @include font-label-xs;
+            &:last-child {
+              font-weight: 500;
+            }
+          }
+        }
+      }
+    }
+    .campaign_actions {
+      margin-bottom: 20px;
+    }
+    .sidebar_notifications_wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      margin-top: 24px;
+      .notifications_actions {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 8px;
+        button {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          width: 162px;
+          height: 32px;
+          background: $black-20;
+          border: 1px solid $borders-grey;
+          border-radius: 8px 8px 0 0;
+          @include font-label-s;
+          color: $black-70;
+          &.active {
+            background: rgba(54, 84, 255, 0.15);
+            border: none;
+            color: $primary-1;
+          }
+        }
+      }
+      .notification_box_wrap {
+        max-height: 48vh;
+        overflow-y: auto;
+
+        .notification {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          max-width: 100%;
+          padding: 8px 16px 8px 12px;
+          background: #ffffff;
+          border: 1px solid $borders-grey;
+          box-sizing: content-box;
+          border-radius: 4px;
+          margin-bottom: 8px;
+          &.activeNotification {
+            background: rgba(54, 84, 255, 0.15);
+          }
+          .icon_wrap {
+            padding-right: 8px;
+            svg {
+              color: $success-green-1;
+            }
+          }
+          .notification_body {
+            .notification_body_header {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              span {
+                @include font-label-xs;
+                color: $black-40;
+              }
+              svg {
+                width: 16px;
+                height: 16px;
+              }
+            }
+            .notification_title {
+              @include font-paragraph-s;
+              margin: 0;
+              cursor: pointer;
+              color: $primary-1;
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .content_right {
+    flex: 1;
+    padding-left: 24px;
+    overflow: hidden;
+    .filters_wrapper {
+      display: flex;
+      button {
+        margin-right: 12px;
+        padding: 0 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 32px;
+        background: $divider-grey;
+        border: 1px solid $borders-grey;
+        border-radius: 37px;
+        cursor: pointer;
+        box-shadow: none !important;
+        &.active {
+          background: rgba(54, 84, 255, 0.15);
+          border: 1px solid rgba(54, 84, 255, 0.15);
+        }
+        span {
+          @include font-label-s;
+          &.button_label {
+            color: $black-70;
+            font-weight: 500;
+          }
+          &.button_value {
+            color: $primary-1;
+            padding-left: 8px;
+          }
+        }
+      }
+    }
+    .campaign_group_wrap {
+      .campaign_heading {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        border-top: 1px solid #ebebed;
+        margin-top: 16px;
+        padding-top: 23px;
+        & > * {
+          margin: 10px 10px 0 0;
+        }
+
+        .campaign_info_block {
+          display: flex;
+          flex-direction: row;
+          padding-right: 20px;
+          .campaign_info_block_inner_container {
+            display: flex;
+            flex-direction: column;
+            .campaign_info_block_title {
+              @include font-label-s-md;
+              color: $primary-1;
+            }
+            .campaign_info_block_subtitle {
+              @include font-label-xs;
+              color: $black-50;
+              padding-top: 2px;
+            }
+          }
+        }
+      }
+    }
+    .campaign_assets_wrapper {
+      .campaign_assets_body_wrap {
+        overflow: auto;
+        display: flex;
+        .assets_actions_wrapper {
+          display: flex;
+          flex-direction: row;
+          margin-top: 24px;
+          button {
+            margin-right: 6px;
+          }
+        }
+      }
+      .campaign_assets_body {
+        display: flex;   
+        align-items: flex-start;    
+        & > * {
+          &:not(:last-child) {
+            margin-right: 16px;
+          } 
+        }
+        .campaign_asset_container {
+          width: 336px;
+          position: relative;     
+          &.edit_container {
+            cursor: pointer;
+            margin-top: 64px;
+          }  
+          .campaign_asset, .campaign_editor {
+            height: 296px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #3654ff;
+            border-radius: 8px;
+            background-color: #fff;
+            margin-top: 12px;
+            margin-bottom: 8px;
+            position: relative;    
+            overflow: hidden;   
+            svg {
+              color: $black-50;
+            }
+          }
+          .campaign_editor {
+            border: 1px solid $borders-grey;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 16px;
+            color: $black-70;
+            @include font-label-m;
+
+            &_noPadding {
+              padding: 0
+            }
+
+            video {
+              width: 336px;
+              height: 296px;
+              border-radius: 8px;
+              object-fit: cover;
+            }
+          }
+        }
+      }
+      .campaign_assets_footer {
+        h6 {
+          @include font-label-s;
+          margin: 0 0 12px;
+          color: $black-70;
+          text-align: right;
+        }
+        .campaign_action {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          button {
+            margin-right: 6px;
+          }
+        }
+      }
+    }
+  }
+}

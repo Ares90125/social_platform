@@ -1,0 +1,20 @@
+@import './_variables';
+@import './_mixins';
+
+.MuiAutocomplete-listbox {
+  li {
+    @include font-label-s;
+  }
+}
+.MuiAutocomplete-root {
+    .MuiInputBase-root {
+        min-height: 40px;
+        fieldset {
+            border-color: $borders-grey;
+            border-radius: 3px;
+        }
+    }
+    input {
+        @include font-label-s;
+    }
+}
