@@ -81,17 +81,17 @@ const ReportingDrawer: React.FC<ReportingDrawerProp> = ({
             />
           </Grid>
           <Grid item className={styles.Reporting_divider} />
-          <Grid className="Report_drawer">
+          <Grid className={styles.Report_drawer}>
             {
-              Array(1).fill(0).map((element,index)=><Grid key={index} className={styles.drawer_map}>
+              keywords?.items?.map((element,index)=><Grid key={index} className={styles.drawer_map}>
                 <Grid className={styles.campaign_map}>
-                  Kids Competition & Activities India
+                {`${element?.groupName}`}
                 </Grid>
                 <Grid className={styles.Reporting_title}>
-                  Comment | 01/07/2022 08:44 PM
+                  {`${element?.type} | ${element?.updatedAtUTC}`}
                 </Grid>
                 <Grid className={styles.drawer_image}>
-                  <img  src='https://bd-cs-dev-media.s3.us-east-1.amazonaws.com/public/pics/3241cc42-a7f1-455a-9954-88e7a0867f3b_1656679450245.png'></img>
+                  <img  src={element?.s3Key}></img>
                 </Grid>
                 <Grid item className={styles.Reporting_divider_map} />
               </Grid>)
