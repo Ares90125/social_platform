@@ -46,6 +46,7 @@ const ReportingDrawer: React.FC<ReportingDrawerProp> = ({
   const onSave= async()=>{
     const processedFileURLs=await Promise.all([processFilesForUrls(image)]);
     console.log('ddddaaaa',processedFileURLs);
+    try{
     createScreenshotUploadDataMutation
           .mutateAsync({
             input:{
@@ -59,9 +60,14 @@ const ReportingDrawer: React.FC<ReportingDrawerProp> = ({
               type: comment
             }
           }).then((response)=>{
-            console.log(response);
+            setUpload(false);
           });
+        }
+        catch(e){
+          console.log('error');
+        }
   }
+  
   const processFilesForUrls = async (file) =>
     Promise.all([uploadToS3(file, 'image', uuid())]);
   const [groupName, setGroupName] = useState<any | null>(null);
