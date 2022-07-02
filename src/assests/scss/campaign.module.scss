@@ -1405,7 +1405,6 @@
   justify-content: space-between;
   display: flex;
   flex-direction: row;
-  
   align-items: center;
   justify-items: center;
 }
@@ -1442,13 +1441,21 @@
   text-align: center;
 }
 .drawer_button_inside{
+  margin-right: 16px;
   width: 90%;
   border: 1px solid #b2bdbd;
 }
+.drawer_button_save{
+  margin-right: 16px;
+  width: 40%;
+  border: 1px solid #b2bdbd;
+}
 .Reporting_divider{
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 5px;
   margin-left: -15px;
-  width: 360px;
+  width: 400px;
   height: 1px;
   background-color: #E3F1F1;
 }
@@ -1487,4 +1494,33 @@
   width: 360px;
   overflow: hidden;
   padding-bottom: 50px;
+}
+.drawer_fileUpload{
+  display: flex;
+  justify-content: center;
+  border: 3px dashed #E3EEE1;
+  border-radius: 5px;
+  height: 200px;
+}
+.drawer_images{
+  width:atuo;
+  height: 194px;
+}
+.screen_upload{
+  padding-left:8px;
+  padding-right:8px;
+  width:380px;
+  overflow-x: hidden;
+}
+.inputtext{
+  width: 100%;
+}
+.Report_upload_title{
+  font-size: 11px;
+  overflow: hidden;
+  max-width:360px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-items: center;
 }
