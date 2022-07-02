@@ -1,44 +1,99 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import React, {ChangeEvent, useEffect, useState } from 'react';
-import { Grid,Drawer, IconButton,Switch,Button, Select, MenuItem, InputLabel,FormControl,RadioGroup,FormLabel,FormControlLabel,Radio,TextField } from '@mui/material';
+import React, {ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { Grid,Drawer, IconButton,Switch,Button, Select, MenuItem, InputLabel,FormControl,RadioGroup,FormLabel,FormControlLabel,Radio,TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import ClearIcon from '@mui/icons-material/Clear';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import clsx from 'clsx';
 import styles from '../../../../../../assests/scss/campaign.module.scss';
 import { getScreenshotUploadData } from '../../../../../../graphs/getScreenshotUploadData';
-import { useQuery } from 'react-query';
-
+import { useMutation, useQuery } from 'react-query';
+import { createStyles,makeStyles } from '@mui/styles';
+import { listCampaignGroupsAndTasksDetails } from '../../../../../../graphs/listCampaignGroupsAndTasksDetails';
+import {uploadToS3 } from '../../../../../../utils/helpers/s3';
+import { v4 as uuid } from 'uuid';
+import {createScreenshotUploadData}  from '../../../../../../graphs/createScreenshotUploadData';
+import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 
 type ReportingDrawerProp = {
   handleClick: Function,
-  value:any
+  value:any,
+  campaign:any,
   // campaignReportS3Data: CMCReportv3S3Data | null,
   open:boolean
 };
 
 const ReportingDrawer: React.FC<ReportingDrawerProp> = ({
+  campaign,
   open,
   handleClick,
   value,
   // campaignReportS3Data,
 }) => {
+  const useStyles = makeStyles(theme =>
+    createStyles({
+      formControlLabel: { fontSize: "15px", "& label": { fontSize: "0.6rem" } },
+      smallRadioButton: {
+        "& svg": {
+          width: "0.7em",
+          height: "0.7em"
+        }
+      }
+    })
+  );
+  const createScreenshotUploadDataMutation = useMutation(createScreenshotUploadData);
+  const onSave= async()=>{
+    const processedFileURLs=await Promise.all([processFilesForUrls(image)]);
+    console.log('ddddaaaa',processedFileURLs);
+    createScreenshotUploadDataMutation
+          .mutateAsync({
+            input:{
+              campaignId: `${campaignId}`,
+              fbPermLink:fbPermlink,
+              groupName: groupName,
+              key: `${campaignId}_${value['title']}_${category()}_${value['name']}`,
+              order: order+1,
+              s3Key: `${processedFileURLs[0]}`,
+              sectionName: `${value['title']}_${category()}_${value['name']}`,
+              type: comment
+            }
+          }).then((response)=>{
+            console.log(response);
+          });
+  }
+  const processFilesForUrls = async (file) =>
+    Promise.all([uploadToS3(file, 'image', uuid())]);
+  const [groupName, setGroupName] = useState<any | null>(null);
+  const [comment,setcomment]=useState('');
+  const [order,setOrder]=useState(0);
+  const [enable,setEnable]=useState(false);
   const [imageurl,setImageurl]=useState<any | null>("");
   const [image, setImage] = useState<any | null>(null);
+  const [fbPermlink, setFbPermlink] = useState<string | null>(null);
   const handleSetImage = (event: ChangeEvent<HTMLInputElement>) => {
       if(event.target.files?.length!=0){
           setImage(event.target.files![0]);
           setImageurl(URL.createObjectURL(event.target.files![0]));
       }
   };
-  const [age, setAge] = React.useState('');
   const [upload, setUpload]=useState(false);
   const {query:{campaignId}} = useRouter();
+  const {query:{id}} = useRouter();
+  const { data: List } = useQuery('list', () => listCampaignGroupsAndTasksDetails(
+     `${campaignId?.toString()}`,
+    `${id?.toString()}`
+  ));
   const { data: keywords } = useQuery('keywords', () => getScreenshotUploadData(`${campaignId}_${value['title']}_${category()}_${value['name']}`, 100),{});
   useEffect(() => {
-    
-  }, [value]);
+    if(imageurl&&comment){
+      console.log(comment);
+      setEnable(true);
+    }
+    else{
+      setEnable(false);
+    }
+  }, [imageurl,comment]);
   const category=()=>{
     if(value['title']=="Engagement Insights"){
       return value['category'].toLowerCase();
@@ -53,6 +108,7 @@ const ReportingDrawer: React.FC<ReportingDrawerProp> = ({
     }
     return value['category'];
   }
+  const classes = useStyles();
   // const list = keywords?.filter((brand) => brand );
   return (
        !value?<></>:
@@ -109,7 +165,11 @@ const ReportingDrawer: React.FC<ReportingDrawerProp> = ({
           <Grid item className={styles.Reporting_divider} />
           <Grid className={styles.Report_drawer}>
             {
-              keywords?.items?.map((element,index)=><Grid key={index} className={styles.drawer_map}>
+              keywords?.items?.map((element,index)=>{
+              if(element?.order&&order<element?.order){
+                setOrder(element?.order);
+              }
+              return (<Grid key={index} className={styles.drawer_map}>
                 <Grid className={styles.campaign_map}>
                 {`${element?.groupName}`}
                 </Grid>
@@ -120,7 +180,7 @@ const ReportingDrawer: React.FC<ReportingDrawerProp> = ({
                   <img  src={element?.s3Key}></img>
                 </Grid>
                 <Grid item className={styles.Reporting_divider_map} />
-              </Grid>)
+              </Grid>);})
             }
           </Grid>
           <Grid className={styles.drawer_button}>
@@ -135,39 +195,55 @@ const ReportingDrawer: React.FC<ReportingDrawerProp> = ({
           <Grid className={styles.Report_upload_title}>
               <Grid onClick={()=>{setUpload(false)}}>
                 <IconButton aria-label="delete" color="default" >
-                  <ArrowBackIcon style={{fontSize:'16px', color:"black"}}/>
+                  <ArrowBackIcon style={{fontSize:'18px', color:"black"}}/>
                 </IconButton>
               </Grid>
-              <Grid className={styles.Reporting_title}>
+              <Grid className={styles.campaign_map}>
                 Upload Screenshot
               </Grid>
           </Grid>
           <Grid item className={styles.Reporting_divider} />
+          <Grid className={styles.Reporting_title_upload}>Group Name</Grid>
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Select a Group</InputLabel>
             <Select
+              fullWidth
+              MenuProps={{
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "right"
+                },
+                transformOrigin: {
+                  vertical: "top",
+                  horizontal: "right"
+                },
+              }}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={age}
-              label="Select a Group"
-              onChange={(event)=>{setAge(event.target.value);}}
+              value={groupName}
+              size="small"
+              onChange={(event)=>{setGroupName(event.target.value);}}
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {List?.map((element,index)=>
+                <MenuItem key={index} style={{width:'300px'}} value={element['groupName']?.toString()}>{element['groupName']}</MenuItem>
+              )}
             </Select>
           </FormControl>
           <FormControl>
-          <FormLabel id="demo-radio-buttons-group-label" className={styles.Reporting_title}>Comment/Post</FormLabel>
+          <FormLabel id="demo-radio-buttons-group-label"  className={styles.Reporting_title_upload}>Comment/Post</FormLabel>
             <RadioGroup
+              onChange={(event)=>{setcomment((event.target as HTMLInputElement).value);}}
               aria-labelledby="demo-radio-buttons-group-label"
               name="radio-buttons-group"
             >
-              <FormControlLabel value="Comment" control={<Radio size="small" />} label="Comment" />
-              <FormControlLabel value="Post" control={<Radio size="small" />} label="Post" />
+              <FormControlLabel className={classes.smallRadioButton}  value="Comment" control={<Radio size="small" />} label={
+                <Typography className={classes.formControlLabel}>Comment</Typography>
+              } />
+              <FormControlLabel className={classes.smallRadioButton}  value="Post" control={<Radio size="small" />} label={
+                <Typography className={classes.formControlLabel}>Post</Typography>
+              } />
             </RadioGroup>
           </FormControl>
-          <Grid className={styles.Reporting_title}>Screenshot</Grid>
+          <Grid className={styles.Reporting_title_upload}>Screenshot</Grid>
           <label  htmlFor="image_upload">
             {
                 (imageurl!="")?
@@ -175,8 +251,9 @@ const ReportingDrawer: React.FC<ReportingDrawerProp> = ({
                   <img src={imageurl} alt="" className={styles.drawer_images}/>
                 </Grid>:
                 <Grid className={styles.drawer_fileUpload}>
-                    <Grid>
-                      Upload Image
+                    <Grid className={styles.Report_static_img}>
+                      <DriveFolderUploadIcon/>
+                      <Grid className={styles.Reporting_title_upload}>Uploaded Post Media</Grid>
                     </Grid>
                 </Grid>
             }
@@ -184,16 +261,20 @@ const ReportingDrawer: React.FC<ReportingDrawerProp> = ({
               <input type="file" style={{opacity:0,width:0}} id="image_upload" accept=".gif,.jpg,.jpeg,.png" onChange={(e) => {handleSetImage(e);}}/>
             </Grid>
           </label>
-          <Grid className={styles.Reporting_title}>Post/Comment fbPermLink</Grid>
-          <TextField id="margin-none" size="small" placeholder="Add the fbPermLink for the post/comment" onChange={(value)=>{}} variant="outlined" className={styles.inputtext}/>
+          <Grid className={styles.Reporting_title_upload}>Post/Comment fbPermLink</Grid>
+          <TextField id="margin-none" size="small" placeholder="Add the fbPermLink for the post/comment" onChange={(event)=>{setFbPermlink(event.target.value)}} variant="outlined" className={styles.inputtext}/>
           <Grid className={styles.drawer_button}>
             <Grid item className={styles.Reporting_divider} />
-            <Button variant="outlined" disableElevation className={styles.drawer_button_save} onClick={()=>{setUpload(true)}}>
+            <Button variant="outlined" disableElevation className={styles.drawer_button_save} onClick={()=>{}}>
               cancel
             </Button>
-            <Button variant="contained" color="primary" disableElevation disabled className={styles.drawer_button_save} onClick={()=>{setUpload(true)}}>
+            {!enable?
+            <Button variant="contained" color="primary" disableElevation disabled className={styles.drawer_button_save} onClick={()=>{}}>
               save
-            </Button>
+            </Button>:
+            <Button variant="contained" color="primary" disableElevation className={styles.drawer_button_save} onClick={()=>{onSave();}}>
+              save
+            </Button>}
           </Grid>
         </Grid>}
       </Drawer>

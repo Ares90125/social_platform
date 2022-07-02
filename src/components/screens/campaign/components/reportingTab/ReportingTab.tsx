@@ -244,6 +244,7 @@ const ReportingTab: React.FC<ReportingTabProps> = ({ campaign }) => {
     <div className={styles.publish_tab_container}>
       {!open?<></>:
       <ReportingDrawer
+        campaign={campaign}
         value={drawer_val}
         handleClick={()=>{setOpen(false);}}
         open={open}/>

@@ -1464,7 +1464,6 @@
   font-size: 11px;
   font-weight: 400;
   color: #707084;
-  text-transform: uppercase;
 }
 .drawer_image{
   height: 64px;
@@ -1478,6 +1477,8 @@
   padding-right: 10px;
 }
 .campaign_map{
+  padding-bottom: 10px;
+  padding-top: 10px;
   font-weight: 500;
   font-size: 16px;
   line-height: 20px;
@@ -1523,4 +1524,18 @@
   flex-direction: row;
   align-items: center;
   justify-items: center;
+}
+.Report_static_img{
+  flex-direction: column;
+  display: flex;
+  justify-items: center;
+  justify-content: center;
+  align-items: center;
+}
+.Reporting_title_upload{
+  padding-top: 20px;
+  line-height: 20px;
+  font-size: 11px;
+  font-weight: 400;
+  color: #707084;
 }

@@ -50,7 +50,6 @@ export const getScreenshotUploadData = async (
   limit: number,
   nextToken?: string
 ): Promise<ScreenshotConnection> => {
-  console.log(key);
   const gqlAPIServiceArguments: { key: string, limit: number, nextToken?: string } = { key, limit, nextToken };
   const result = await requestApi<
     typeof gqlAPIServiceArguments,
